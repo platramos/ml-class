@@ -16,7 +16,7 @@ let {
 });
 
 const regression = new LinearRegression(features, labels, {
-  learningRate: 0.0001,
+  learningRate: 0.1,
   iterations: 100
 });
 
