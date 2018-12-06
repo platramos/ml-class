@@ -11,7 +11,7 @@ class LinearRegression {
       iterations: 100
     }, options);
 
-    this.weights = tf.zeros([2, 1])
+    this.weights = tf.zeros([this.features.shape[1], 1])
   }
 
   gradientDescent() {
@@ -39,9 +39,9 @@ class LinearRegression {
     const predictions = testFeatures.matMul(this.weights);
 
     const res = testLabels.sub(predictions)
-        .pow(2)
-        .sum()
-        .get();
+      .pow(2)
+      .sum()
+      .get();
 
     const tot = testLabels.sub(testLabels.mean())
       .pow(2)
@@ -55,23 +55,29 @@ class LinearRegression {
     features = tf.tensor(features);
 
     if (this.mean && this.variance) {
-      features = features.sub(this.mean).div(this.variance.pow(0.5))
+      features = features.sub(this.mean)
+        .div(this.variance.pow(0.5))
     } else {
       features = this.standarize(features);
     }
 
-    features = tf.ones([features.shape[0], 1]).concat(features, 1);
+    features = tf.ones([features.shape[0], 1])
+      .concat(features, 1);
 
     return features;
   }
 
   standarize(features) {
-    const {mean, variance} = tf.moments(features, 0);
+    const {
+      mean,
+      variance
+    } = tf.moments(features, 0);
 
     this.mean = mean;
     this.variance = variance;
 
-    return features.sub(mean).div(variance.pow(0.5))
+    return features.sub(mean)
+      .div(variance.pow(0.5))
   }
 }
 

@@ -11,7 +11,7 @@ let {
 } = loadCSV('cars.csv', {
   shuffle: true,
   splitTest: 50,
-  dataColumns: ['horsepower'],
+  dataColumns: ['horsepower', 'displacement', 'weight'],
   labelColumns: ['mpg']
 });
 
