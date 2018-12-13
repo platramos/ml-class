@@ -18,15 +18,14 @@ let {
 
 const regression = new LinearRegression(features, labels, {
   learningRate: 0.1,
-  iterations: 50
+  iterations: 100
 });
 
 regression.train();
 const r2 = regression.test(testFeatures, testLabels);
 
-
 plot({
-  x: [1, 2, 3, 4],
+  x: regression.mseHistory.reverse(),
   xLabel: 'Iteration #',
   yLabel: 'Mean Squared Error'
 });
