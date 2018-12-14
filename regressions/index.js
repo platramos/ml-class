@@ -18,7 +18,8 @@ let {
 
 const regression = new LinearRegression(features, labels, {
   learningRate: 0.1,
-  iterations: 100
+  iterations: 100,
+  batchSize: 10
 });
 
 regression.train();

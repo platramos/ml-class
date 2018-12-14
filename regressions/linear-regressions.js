@@ -15,21 +15,39 @@ class LinearRegression {
     this.weights = tf.zeros([this.features.shape[1], 1])
   }
 
-  gradientDescent() {
-    const currentGuesses = this.features.matMul(this.weights);
-    const differences = currentGuesses.sub(this.labels);
+  gradientDescent(features, labels) {
+    const currentGuesses = features.matMul(this.weights);
+    const differences = currentGuesses.sub(labels);
 
-    const slopes = this.features
+    const slopes = features
       .transpose()
       .matMul(differences)
-      .div(this.features.shape[0]);
+      .div(features.shape[0]);
 
     this.weights = this.weights.sub(slopes.mul(this.options.learningRate));
   }
 
   train() {
+    const batchQuantity = Math.floor(this.features.shape[0] / this.options.batchSize);
+
     for (let i = 0; i < this.options.iterations; i++) {
-      this.gradientDescent();
+      for (let j = 0; j < batchQuantity; j++) {
+          const startingIndex = j * this.options.batchSize;
+          const { batchSize } = this.options;
+
+          const featureSlice = this.features.slice(
+            [startingIndex, 0],
+            [batchSize, -1]
+          );
+
+          const labelSlice = this.labels.slice(
+            [startingIndex, 0],
+            [batchSize, -1]
+          );
+
+          this.gradientDescent(featureSlice, labelSlice);
+      }
+
       this.recordMSE();
       this.updateLearningRate();
     }
