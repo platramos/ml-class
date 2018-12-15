@@ -12,13 +12,13 @@ let {
 } = loadCSV('cars.csv', {
   shuffle: true,
   splitTest: 50,
-  dataColumns: ['horsepower', 'displacement', 'weight'],
+  dataColumns: ['horsepower', 'weight', 'displacement'],
   labelColumns: ['mpg']
 });
 
 const regression = new LinearRegression(features, labels, {
   learningRate: 0.1,
-  iterations: 100,
+  iterations: 3,
   batchSize: 10
 });
 
@@ -32,3 +32,7 @@ plot({
 });
 
 console.log('R2 is:', r2);
+
+regression.predict([
+  [120, 2, 380]
+]).print();
