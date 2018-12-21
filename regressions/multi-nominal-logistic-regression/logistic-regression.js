@@ -58,17 +58,15 @@ class LogisticRegression {
     return this.processFeatures(observations)
         .matMul(this.weights)
         .softmax()
-        .greater(this.options.decisionBoundary)
-        .cast('float32');
+        .argMax(1)
   }
 
   test(testFeatures, testLabels) {
-    const predictions = this.predict(testFeatures).round();
-    testLabels = tf.tensor(testLabels);
+    const predictions = this.predict(testFeatures)
+    testLabels = tf.tensor(testLabels).argMax(1);
 
     const incorrect = predictions
-                        .sub(testLabels)
-                        .abs()
+                        .notEqual(testLabels)
                         .sum()
                         .get();
 
@@ -97,11 +95,13 @@ class LogisticRegression {
       variance
     } = tf.moments(features, 0);
 
+    const filler = variance.cast('bool').logicalNot().cast('float32');
+
     this.mean = mean;
-    this.variance = variance;
+    this.variance = variance.add(filler);
 
     return features.sub(mean)
-      .div(variance.pow(0.5))
+      .div(this.variance.pow(0.5))
   }
 
   recordCost() {
