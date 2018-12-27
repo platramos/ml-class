@@ -132,7 +132,6 @@ class LogisticRegression {
     });
 
     this.costHistory.unshift(cost);
-    console.log(this.costHistory);
   }
 
   updateLearningRate() {
